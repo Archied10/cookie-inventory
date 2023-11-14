@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:cookie_inventory/widgets/left_drawer.dart';
+import 'package:cookie_inventory/widgets/lc_card.dart';
 
 class MyHomePage extends StatelessWidget {
   MyHomePage({Key? key}) : super(key: key);
 
-  final List<CookieItem> items = [
-    CookieItem("Lihat Item", Icons.cookie, Colors.amber),
-    CookieItem("Tambah Item", Icons.add_box, Colors.amberAccent),
-    CookieItem("Logout", Icons.logout, Colors.yellow),
+  final List<LCItem> items = [
+    LCItem("Lihat Item", Icons.view_list, Colors.lightBlue),
+    LCItem("Tambah Item", Icons.add_box, Colors.blue),
+    LCItem("Logout", Icons.logout, Colors.indigo),
   ];
 
   // This widget is the home page of your application. It is stateful, meaning
@@ -29,10 +31,10 @@ class MyHomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Cookie Inventory',
+          'Light Cone Inventory',
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.amber,
+        backgroundColor: Colors.indigo,
       ),
       body: SingleChildScrollView(
         // Widget wrapper yang dapat discroll
@@ -45,7 +47,7 @@ class MyHomePage extends StatelessWidget {
                 padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
                 // Widget Text untuk menampilkan tulisan dengan alignment center dan style yang sesuai
                 child: Text(
-                  'Cookie Inventory', // Text yang menandakan toko
+                  'Light Cone Inventory', // Text yang menandakan toko
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 30,
@@ -62,69 +64,17 @@ class MyHomePage extends StatelessWidget {
                 mainAxisSpacing: 10,
                 crossAxisCount: 3,
                 shrinkWrap: true,
-                children: items.map((CookieItem item) {
+                children: items.map((LCItem item) {
                   // Iterasi untuk setiap item
-                  return CookieCard(item);
+                  return LCCard(item);
                 }).toList(),
               ),
             ],
           ),
         ),
       ),
+      drawer: const LeftDrawer(),
     );
   }
 
-}
-
-class CookieItem {
-  final String name;
-  final IconData icon;
-  final Color color;
-
-  CookieItem(this.name, this.icon, this.color);
-}
-
-class CookieCard extends StatelessWidget {
-  final CookieItem item;
-
-  const CookieCard(this.item, {super.key}); // Constructor
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: item.color,
-      child: InkWell(
-        // Area responsive terhadap sentuhan
-        onTap: () {
-          // Memunculkan SnackBar ketika diklik
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(SnackBar(
-                content: Text("Kamu telah menekan tombol ${item.name}!")));
-        },
-        child: Container(
-          // Container untuk menyimpan Icon dan Text
-          padding: const EdgeInsets.all(8),
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  item.icon,
-                  color: Colors.white,
-                  size: 30.0,
-                ),
-                const Padding(padding: EdgeInsets.all(3)),
-                Text(
-                  item.name,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(color: Colors.white),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
 }
