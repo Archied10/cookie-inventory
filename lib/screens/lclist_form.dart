@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:cookie_inventory/widgets/left_drawer.dart';
-import 'package:cookie_inventory/screens/lc_list.dart';
+import 'package:cookie_inventory/screens/menu.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:provider/provider.dart';
+import 'dart:convert';
 
 class LCFormPage extends StatefulWidget {
   const LCFormPage({super.key});
@@ -15,13 +18,15 @@ class _LCFormPageState extends State<LCFormPage> {
   int _amount = 0;
   String _description = "";
   int _rarity = 0;
-  String _lc_path = "";
-  int _base_atk = 0;
-  int _base_hp = 0;
-  int _base_def = 0;
+  String _lcPath = "";
+  int _baseAtk = 0;
+  int _baseHp = 0;
+  int _baseDef = 0;
 
   @override
   Widget build(BuildContext context) {
+    final request = context.watch<CookieRequest>();
+
     return Scaffold(
       appBar: AppBar(
         title: const Center(
@@ -149,7 +154,7 @@ class _LCFormPageState extends State<LCFormPage> {
                   ),
                   onChanged: (String? value) {
                     setState(() {
-                      _lc_path = value!;
+                      _lcPath = value!;
                     });
                   },
                   validator: (String? value) {
@@ -172,7 +177,7 @@ class _LCFormPageState extends State<LCFormPage> {
                   ),
                   onChanged: (String? value) {
                     setState(() {
-                      _base_atk = int.parse(value!);
+                      _baseAtk = int.parse(value!);
                     });
                   },
                   validator: (String? value) {
@@ -198,7 +203,7 @@ class _LCFormPageState extends State<LCFormPage> {
                   ),
                   onChanged: (String? value) {
                     setState(() {
-                      _base_hp = int.parse(value!);
+                      _baseHp = int.parse(value!);
                     });
                   },
                   validator: (String? value) {
@@ -224,7 +229,7 @@ class _LCFormPageState extends State<LCFormPage> {
                   ),
                   onChanged: (String? value) {
                     setState(() {
-                      _base_def = int.parse(value!);
+                      _baseDef = int.parse(value!);
                     });
                   },
                   validator: (String? value) {
@@ -247,51 +252,40 @@ class _LCFormPageState extends State<LCFormPage> {
                       backgroundColor:
                       MaterialStateProperty.all(Colors.indigo),
                     ),
-                    onPressed: () {
+                    onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        items.add(LightCone(
-                            name: _name,
-                            amount: _amount,
-                            description: _description,
-                            rarity: _rarity,
-                            lc_path: _lc_path,
-                            base_atk: _base_atk,
-                            base_hp: _base_hp,
-                            base_def: _base_def));
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              title: const Text('Item berhasil tersimpan'),
-                              content: SingleChildScrollView(
-                                child: Column(
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Nama: $_name'),
-                                    Text('Amount: $_amount'),
-                                    Text('Deskripsi: $_description'),
-                                    Text('Rarity: $_rarity'),
-                                    Text('Path: $_lc_path'),
-                                    Text('Base ATK: $_base_atk'),
-                                    Text('Base HP: $_base_def'),
-                                    Text('Base DEF: $_base_def'),
-                                  ],
-                                ),
-                              ),
-                              actions: [
-                                TextButton(
-                                  child: const Text('OK'),
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                ),
-                              ],
-                            );
-                          },
-                        );
+                        // Kirim ke Django dan tunggu respons
+                        // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
+                        final response = await request.postJson(
+                            "http://127.0.0.1:8000/create-flutter/",
+                            jsonEncode(<String, String>{
+                              'name': _name,
+                              'amount': _amount.toString(),
+                              'description': _description,
+                              // TODO: Sesuaikan field data sesuai dengan aplikasimu
+                              'rarity': _rarity.toString(),
+                              'lc_path': _lcPath,
+                              'base_atk': _baseAtk.toString(),
+                              'base_hp': _baseHp.toString(),
+                              'base_def': _baseDef.toString(),
+                            }));
+                        if (response['status'] == 'success') {
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(const SnackBar(
+                            content: Text("Item baru berhasil disimpan!"),
+                          ));
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => MyHomePage()),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(const SnackBar(
+                            content:
+                            Text("Terdapat kesalahan, silakan coba lagi."),
+                          ));
+                        }
                       }
-                      _formKey.currentState!.reset();
                     },
                     child: const Text(
                       "Save",

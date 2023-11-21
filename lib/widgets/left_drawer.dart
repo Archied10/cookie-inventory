@@ -63,14 +63,13 @@ class LeftDrawer extends StatelessWidget {
           ),
           ListTile(
             leading: const Icon(Icons.view_list),
-            title: const Text('Lihat Item'),
-            // Bagian redirection ke LCListPage
+            title: const Text('Daftar Item'),
             onTap: () {
-              Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const LCListPage(),
-                  ));
+              // Route menu ke halaman produk
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ItemPage()),
+              );
             },
           ),
         ],

@@ -16,6 +16,13 @@ Ini merupakan solusi saya dari [Tugas PBP Ganjil 23/24](https://pbp-fasilkom-ui.
     - [Elemen Input pada Form](#elemen-input-pada-form)
     - [Clean Architecture](#clean-architecture)
     - [Langkah Pengerjaan VII](#langkah-pengerjaan-viii)
+- [Questions and Answers Tugas 9](#questions-and-answers-tugas-9)
+    - [Pengambilan Data JSON](#pengambilan-data-json)
+    - [CookieRequest](#cookierequest)
+    - [Data JSON hingga Flutter](#data-json-hingga-flutter)
+    - [Autentikasi Flutter](#autentikasi-flutter)
+    - [Seluruh Widget](#seluruh-widget)
+    - [Langkah Pengerjaan IX](#langkah-pengerjaan-ix)
 - [Useful resources](#useful-resources)
 - [Author](#author)
 
@@ -104,11 +111,51 @@ Bagaimana penerapan clean architecture pada aplikasi Flutter?
 Referensi: [Flutter Clean Architecture Template](https://belajarinformatika.com/flutter-clean-architecture-template/)
 
 ### Langkah Pengerjaan VIII
+Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step! (bukan hanya sekadar mengikuti tutorial).
 - Pertama, saya membuat halaman formulir di mana user dapat menginput elemen `name`, `amount`, `description`, `rarity`, `lc_path`, `base_atk`, `base_hp`, dan `base_def`. Tiap elemen input tersebut akan divalidasi sesuai dengan tipe datanya. Ketika user klik tombol save, maka akan muncul pop-up yang berisikan data yang diinput.Data yang diinput juga akan disimpan di dalam list.
 - Kedua, saya membuat tombol `Tambah Item` dan `Lihat Item` menjadi berfungsi. Ketika ditekan, tombol-tombol tersebut akan menuju page yang bersesuaian.
 - Ketiga, saya membuat drawer yang berisikan opsi navigasi ke halaman utama, tambah item, dan lihat item.
 - Keempat, saya melakukan refactoring file agar dapat mempermudah pengerjaan proyek untuk kedepannya.
 - Terakhir, saya menambahkan page baru untuk menampilkan item yang diinput user dalam bentuk tabel.
+
+## Questions and Answers Tugas 9
+
+### Pengambilan Data JSON
+Apakah bisa kita melakukan pengambilan data JSON tanpa membuat model terlebih dahulu? Jika iya, apakah hal tersebut lebih baik daripada membuat model sebelum melakukan pengambilan data JSON?
+- Hal tersebut bisa dilakukan, tetapi sebaiknya dihindari. Dengan membuat model terlebih dahulu, kita dapat mengetahui struktur data yang akan diambil dan melakukan validasi untuk memastikan keakuratan data yang diambil sesuai dengan kebutuhan.
+
+### CookieRequest
+Jelaskan fungsi dari CookieRequest dan jelaskan mengapa instance CookieRequest perlu untuk dibagikan ke semua komponen di aplikasi Flutter.
+- `CookieRequest` dalam konteks Flutter berfungsi sebagai suatu kelas atau objek yang digunakan untuk menyimpan dan mengelola informasi cookie dalam permintaan HTTP. Cookie sendiri merupakan data kecil yang disimpan di sisi klien dan umumnya digunakan untuk melacak informasi terkait pengguna atau sesi.
+- Instance CookieRequest perlu untuk dibagikan ke semua komponen agar tiap informasi pada tiap komponen konsisten dan lebih mudah untuk mengatur cookie tersebut. Dengan hanya menggunakan satu instance, duplikasi dapat dihindari dan akan meningkatkan kinerja aplikasi secara menyeluruh.
+
+### Data JSON hingga Flutter
+Jelaskan mekanisme pengambilan data dari JSON hingga dapat ditampilkan pada Flutter.
+- Pertama, aplikasi Flutter akan membuat permintaan HTTP ke server yang memberikan respon dalam format JSON. Selanjutnya, data JSON tersebut di-deserialize menggunakan `dart:convert` agar dapat diolah oleh Flutter. Model data Dart dibuat sesuai dengan struktur JSON untuk mempermudah manipulasi. Setelah data diolah, widget Flutter digunakan untuk menampilkan data tersebut.
+
+### Autentikasi Flutter
+Jelaskan mekanisme autentikasi dari input data akun pada Flutter ke Django hingga selesainya proses autentikasi oleh Django dan tampilnya menu pada Flutter.
+- Proses autentikasi antara aplikasi Flutter dan server Django melibatkan penggunaan formulir input pada Flutter untuk memasukkan informasi akun. Setelah itu, aplikasi Flutter membuat permintaan HTTP ke server Django dengan data akun yang diisi pengguna. Django memvalidasi informasi akun tersebut dan, jika valid, menghasilkan token akses yang dikirimkan kembali ke Flutter. Aplikasi Flutter menyimpan token ini untuk otentikasi permintaan selanjutnya. Setelah berhasil diautentikasi, pengguna diarahkan ke screen selanjutnya yang hanya untuk pengguna terotentikasi.
+
+### Seluruh Widget
+Sebutkan seluruh widget yang kamu pakai pada tugas ini dan jelaskan fungsinya masing-masing.
+- Selain widget pada Tugas 7, terdapat beberapa widget tambahan, yaitu:
+- ElevatedButton: button dengan tambahan dimensi.
+- AlertDialog: digunakan untuk menampilkan dialog saat login gagal. 
+- FutureBuilder: digunakan untuk membuat tampilan yang bergantung pada hasil dari sebuah Future
+- ListView.builder: digunakan untuk menampilkan daftar item dengan membangun item secara dinamis sesuai dengan jumlah data yang diterima dari server.
+- ListTile: digunakan untuk menampilkan setiap item dalam daftar. Setiap item dapat diklik untuk menavigasi ke halaman detail menggunakan `Navigator.push`.
+- CircularProgressIndicator: indikator loading yang muncul ketika data sedang diambil.
+- SizedBox: digunakan untuk memberikan ruang antar widget.
+
+### Langkah Pengerjaan IX
+Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step! (bukan hanya sekadar mengikuti tutorial).
+- Pertama, saya membuat halaman login di Flutter, dan pada Django, saya membuat app baru bernama `authentication` untuk melakukan login dan logout user.
+- Kedua, saya membuat model yang sesuai dengan project Django.
+- Ketiga, saya membuat halaman yang berisikan item yang diambil dari Django. Ketika nama item diklik, maka detail item akan terlihat.
+- Keempat, saya mengintegrasikan form di Flutter dengan Django.
+- Kelima, saya membuat fitur logout.
+- Terakhir, saya membuat agar data yang ditampilkan hanya merupakan milik user yang login.
 
 ## Useful resources
 
